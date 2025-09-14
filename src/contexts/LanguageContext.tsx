@@ -151,7 +151,7 @@ const translations = {
     'timezone.ist': 'IST (Indian Standard Time)',
     
     // Dashboard
-    'dashboard.welcome': 'Ready to continue your learning journey?',
+    'dashboard.New': 'Ready to continue your learning journey?',
     'dashboard.coursesEnrolled': 'Courses Enrolled',
     'dashboard.videosWatched': 'Videos Watched',
     'dashboard.assignmentsDone': 'Assignments Done',
@@ -164,8 +164,8 @@ const translations = {
     
     // Common Actions
     'common.watch': 'Watch',
-    'common.view': 'View',
-    'common.save': 'Save Changes',
+    'common.v3' : 'View Details',
+    'common.s3' : 'save changes',
     
     // Offline Features
     'offline.sync': 'Sync',
@@ -320,7 +320,7 @@ const translations = {
     'timezone.ist': 'IST (भारतीय मानक समय)',
     
     // Dashboard
-    'dashboard.welcome': 'अपनी पढ़ाई की यात्रा जारी रखने के लिए तैयार हैं?',
+    'dashboard.new2': 'अपनी पढ़ाई की यात्रा जारी रखने के लिए तैयार हैं?',
     'dashboard.coursesEnrolled': 'नामांकित कोर्स',
     'dashboard.videosWatched': 'देखे गए वीडियो',
     'dashboard.assignmentsDone': 'पूरे किए गए असाइनमेंट',
@@ -333,8 +333,8 @@ const translations = {
     
     // Common Actions
     'common.watch': 'देखें',
-    'common.view': 'देखें',
-    'common.save': 'परिवर्तन सहेजें',
+    'common.V': 'देखें',
+    'common.s': 'परिवर्तन सहेजें',
     
     // Offline Features
     'offline.sync': 'सिंक',
@@ -489,7 +489,7 @@ const translations = {
     'timezone.ist': 'IST (ਭਾਰਤੀ ਮਿਆਰੀ ਸਮਾਂ)',
     
     // Dashboard
-    'dashboard.welcome': 'ਕੀ ਤੁਸੀਂ ਆਪਣੀ ਸਿੱਖਿਆ ਦੀ ਯਾਤਰਾ ਜਾਰੀ ਰੱਖਣ ਲਈ ਤਿਆਰ ਹੋ?',
+    'dashboard.New3': 'ਕੀ ਤੁਸੀਂ ਆਪਣੀ ਸਿੱਖਿਆ ਦੀ ਯਾਤਰਾ ਜਾਰੀ ਰੱਖਣ ਲਈ ਤਿਆਰ ਹੋ?',
     'dashboard.coursesEnrolled': 'ਦਾਖਲ ਕੋਰਸ',
     'dashboard.videosWatched': 'ਦੇਖੇ ਗਏ ਵੀਡੀਓ',
     'dashboard.assignmentsDone': 'ਪੂਰੇ ਕੀਤੇ ਅਸਾਈਨਮੈਂਟ',
@@ -502,8 +502,8 @@ const translations = {
     
     // Common Actions
     'common.watch': 'ਦੇਖੋ',
-    'common.view': 'ਦੇਖੋ',
-    'common.save': 'ਤਬਦੀਲੀਆਂ ਸੇਵ ਕਰੋ',
+    'common.v2': 'ਦੇਖੋ',
+    'common.s3': 'ਤਬਦੀਲੀਆਂ ਸੇਵ ਕਰੋ',
     
     // Offline Features
     'offline.sync': 'ਸਿੰਕ',
