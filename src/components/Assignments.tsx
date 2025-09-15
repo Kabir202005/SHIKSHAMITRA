@@ -1,25 +1,48 @@
-import React, { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card"
+import React, { useState } from "react"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card"
 import { Button } from "./ui/button"
 import { Badge } from "./ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
 import { Progress } from "./ui/progress"
-import { 
-  FileText, 
-  Clock, 
-  CheckCircle, 
+import {
+  FileText,
+  Clock,
+  CheckCircle,
   AlertCircle,
   Calendar,
   BookOpen,
   Upload,
   Download,
-  Eye
-} from 'lucide-react'
+  Eye,
+} from "lucide-react"
+
+// ✅ Type for assignments
+type Assignment = {
+  id: number
+  title: string
+  subject: string
+  dueDate: string
+  status: "pending" | "completed" | "overdue"
+  difficulty: "Easy" | "Medium" | "Hard"
+  totalMarks: number
+  submittedMarks: number | null
+  description: string
+  timeLeft: string
+  instructor: string
+  feedback?: string
+}
 
 export function Assignments() {
-  const [selectedTab, setSelectedTab] = useState('pending')
+  const [selectedTab, setSelectedTab] = useState("pending")
 
-  const assignments = [
+  // ✅ Strongly typed assignments array
+  const assignments: Assignment[] = [
     {
       id: 1,
       title: "Quadratic Equations Problem Set",
@@ -29,9 +52,10 @@ export function Assignments() {
       difficulty: "Medium",
       totalMarks: 50,
       submittedMarks: null,
-      description: "Solve 10 quadratic equation problems using different methods including factoring, completing the square, and quadratic formula.",
+      description:
+        "Solve 10 quadratic equation problems using different methods including factoring, completing the square, and quadratic formula.",
       timeLeft: "2 days",
-      instructor: "Dr. Rajesh Sharma"
+      instructor: "Dr. Rajesh Sharma",
     },
     {
       id: 2,
@@ -42,9 +66,10 @@ export function Assignments() {
       difficulty: "Easy",
       totalMarks: 30,
       submittedMarks: null,
-      description: "Write a detailed lab report on the photosynthesis experiment conducted in class. Include observations, results, and conclusions.",
+      description:
+        "Write a detailed lab report on the photosynthesis experiment conducted in class. Include observations, results, and conclusions.",
       timeLeft: "5 days",
-      instructor: "Prof. Meena Gupta"
+      instructor: "Prof. Meena Gupta",
     },
     {
       id: 3,
@@ -55,9 +80,10 @@ export function Assignments() {
       difficulty: "Medium",
       totalMarks: 40,
       submittedMarks: null,
-      description: "Write a 500-word essay on the impact of climate change on rural communities. Use proper grammar and cite your sources.",
+      description:
+        "Write a 500-word essay on the impact of climate change on rural communities. Use proper grammar and cite your sources.",
       timeLeft: "7 days",
-      instructor: "Ms. Priya Kaur"
+      instructor: "Ms. Priya Kaur",
     },
     {
       id: 4,
@@ -71,7 +97,8 @@ export function Assignments() {
       description: "Basic algebra operations and equation solving.",
       timeLeft: "Completed",
       instructor: "Dr. Rajesh Sharma",
-      feedback: "Excellent work! You've shown good understanding of algebraic concepts."
+      feedback:
+        "Excellent work! You've shown good understanding of algebraic concepts.",
     },
     {
       id: 5,
@@ -82,10 +109,12 @@ export function Assignments() {
       difficulty: "Medium",
       totalMarks: 35,
       submittedMarks: 32,
-      description: "Create a timeline of major events in Indian history from 1857 to 1947.",
+      description:
+        "Create a timeline of major events in Indian history from 1857 to 1947.",
       timeLeft: "Completed",
       instructor: "Dr. Vikram Singh",
-      feedback: "Good effort! Include more details about the independence movement."
+      feedback:
+        "Good effort! Include more details about the independence movement.",
     },
     {
       id: 6,
@@ -96,35 +125,45 @@ export function Assignments() {
       difficulty: "Hard",
       totalMarks: 45,
       submittedMarks: null,
-      description: "Solve problems related to motion, velocity, and acceleration.",
+      description:
+        "Solve problems related to motion, velocity, and acceleration.",
       timeLeft: "8 days overdue",
-      instructor: "Prof. Meena Gupta"
-    }
+      instructor: "Prof. Meena Gupta",
+    },
   ]
 
-  const pendingAssignments = assignments.filter(a => a.status === 'pending')
-  const completedAssignments = assignments.filter(a => a.status === 'completed')
-  const overdueAssignments = assignments.filter(a => a.status === 'overdue')
+  const pendingAssignments = assignments.filter((a) => a.status === "pending")
+  const completedAssignments = assignments.filter((a) => a.status === "completed")
+  const overdueAssignments = assignments.filter((a) => a.status === "overdue")
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: Assignment["status"]) => {
     switch (status) {
-      case 'pending': return 'text-orange-600 bg-orange-50'
-      case 'completed': return 'text-green-600 bg-green-50'
-      case 'overdue': return 'text-red-600 bg-red-50'
-      default: return 'text-gray-600 bg-gray-50'
+      case "pending":
+        return "text-orange-600 bg-orange-50"
+      case "completed":
+        return "text-green-600 bg-green-50"
+      case "overdue":
+        return "text-red-600 bg-red-50"
+      default:
+        return "text-gray-600 bg-gray-50"
     }
   }
 
-  const getDifficultyColor = (difficulty) => {
+  const getDifficultyColor = (difficulty: Assignment["difficulty"]) => {
     switch (difficulty) {
-      case 'Easy': return 'bg-green-100 text-green-800'
-      case 'Medium': return 'bg-yellow-100 text-yellow-800'
-      case 'Hard': return 'bg-red-100 text-red-800'
-      default: return 'bg-gray-100 text-gray-800'
+      case "Easy":
+        return "bg-green-100 text-green-800"
+      case "Medium":
+        return "bg-yellow-100 text-yellow-800"
+      case "Hard":
+        return "bg-red-100 text-red-800"
+      default:
+        return "bg-gray-100 text-gray-800"
     }
   }
 
-  const AssignmentCard = ({ assignment }) => (
+  // ✅ Properly typed AssignmentCard
+  const AssignmentCard: React.FC<{ assignment: Assignment }> = ({ assignment }) => (
     <Card key={assignment.id} className="hover:shadow-md transition-shadow">
       <CardHeader>
         <div className="flex items-start justify-between">
@@ -132,19 +171,27 @@ export function Assignments() {
             <CardTitle className="text-lg">{assignment.title}</CardTitle>
             <div className="flex items-center gap-2">
               <Badge variant="outline">{assignment.subject}</Badge>
-              <Badge variant="outline" className={getDifficultyColor(assignment.difficulty)}>
+              <Badge
+                variant="outline"
+                className={getDifficultyColor(assignment.difficulty)}
+              >
                 {assignment.difficulty}
               </Badge>
             </div>
           </div>
-          <div className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(assignment.status)}`}>
-            {assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)}
+          <div
+            className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+              assignment.status,
+            )}`}
+          >
+            {assignment.status.charAt(0).toUpperCase() +
+              assignment.status.slice(1)}
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <CardDescription>{assignment.description}</CardDescription>
-        
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -164,26 +211,37 @@ export function Assignments() {
           </div>
         </div>
 
-        {assignment.status === 'completed' && (
+        {assignment.status === "completed" && (
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium">Score:</span>
               <span className="text-lg font-bold text-green-600">
-                {assignment.submittedMarks}/{assignment.totalMarks} ({Math.round((assignment.submittedMarks / assignment.totalMarks) * 100)}%)
+                {assignment.submittedMarks}/{assignment.totalMarks} (
+                {Math.round(
+                  ((assignment.submittedMarks ?? 0) / assignment.totalMarks) * 100,
+                )}
+                %)
               </span>
             </div>
-            <Progress value={(assignment.submittedMarks / assignment.totalMarks) * 100} className="h-2" />
+            <Progress
+              value={
+                ((assignment.submittedMarks ?? 0) / assignment.totalMarks) * 100
+              }
+              className="h-2"
+            />
             {assignment.feedback && (
               <div className="p-3 bg-muted rounded-lg">
                 <p className="text-sm font-medium mb-1">Teacher's Feedback:</p>
-                <p className="text-sm text-muted-foreground">{assignment.feedback}</p>
+                <p className="text-sm text-muted-foreground">
+                  {assignment.feedback}
+                </p>
               </div>
             )}
           </div>
         )}
 
         <div className="flex gap-2">
-          {assignment.status === 'pending' && (
+          {assignment.status === "pending" && (
             <>
               <Button size="sm">
                 <Upload className="h-4 w-4 mr-2" />
@@ -195,7 +253,7 @@ export function Assignments() {
               </Button>
             </>
           )}
-          {assignment.status === 'completed' && (
+          {assignment.status === "completed" && (
             <>
               <Button size="sm" variant="outline">
                 <Download className="h-4 w-4 mr-2" />
@@ -207,7 +265,7 @@ export function Assignments() {
               </Button>
             </>
           )}
-          {assignment.status === 'overdue' && (
+          {assignment.status === "overdue" && (
             <>
               <Button size="sm" variant="destructive">
                 <Upload className="h-4 w-4 mr-2" />
@@ -237,17 +295,19 @@ export function Assignments() {
             <p className="text-sm text-muted-foreground">Pending</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4 text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
               <CheckCircle className="h-5 w-5 text-green-500" />
-              <span className="text-2xl font-bold">{completedAssignments.length}</span>
+              <span className="text-2xl font-bold">
+                {completedAssignments.length}
+              </span>
             </div>
             <p className="text-sm text-muted-foreground">Completed</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4 text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
@@ -257,7 +317,7 @@ export function Assignments() {
             <p className="text-sm text-muted-foreground">Overdue</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4 text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
@@ -293,7 +353,7 @@ export function Assignments() {
         <TabsContent value="pending" className="space-y-4">
           {pendingAssignments.length > 0 ? (
             <div className="space-y-4">
-              {pendingAssignments.map(assignment => (
+              {pendingAssignments.map((assignment) => (
                 <AssignmentCard key={assignment.id} assignment={assignment} />
               ))}
             </div>
@@ -309,7 +369,7 @@ export function Assignments() {
         <TabsContent value="completed" className="space-y-4">
           {completedAssignments.length > 0 ? (
             <div className="space-y-4">
-              {completedAssignments.map(assignment => (
+              {completedAssignments.map((assignment) => (
                 <AssignmentCard key={assignment.id} assignment={assignment} />
               ))}
             </div>
@@ -317,7 +377,9 @@ export function Assignments() {
             <div className="text-center py-12">
               <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-lg font-medium mb-2">No completed assignments</h3>
-              <p className="text-muted-foreground">Complete some assignments to see them here.</p>
+              <p className="text-muted-foreground">
+                Complete some assignments to see them here.
+              </p>
             </div>
           )}
         </TabsContent>
@@ -325,7 +387,7 @@ export function Assignments() {
         <TabsContent value="overdue" className="space-y-4">
           {overdueAssignments.length > 0 ? (
             <div className="space-y-4">
-              {overdueAssignments.map(assignment => (
+              {overdueAssignments.map((assignment) => (
                 <AssignmentCard key={assignment.id} assignment={assignment} />
               ))}
             </div>
@@ -340,7 +402,7 @@ export function Assignments() {
 
         <TabsContent value="all" className="space-y-4">
           <div className="space-y-4">
-            {assignments.map(assignment => (
+            {assignments.map((assignment) => (
               <AssignmentCard key={assignment.id} assignment={assignment} />
             ))}
           </div>
