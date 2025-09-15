@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card"
 import { Button } from "./ui/button"
 import { Progress } from "./ui/progress"
-import { ImageWithFallback } from "./figma/ImageWithFallback"
+import { ImageWithFallback } from "./Fallback/ImageWithFallback"
 import { InstallPrompt, OfflineFeaturesBanner } from "./InstallPrompt"
 import { useLanguage } from "../contexts/LanguageContext"
 import { 

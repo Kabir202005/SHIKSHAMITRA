@@ -4,7 +4,7 @@ import { Button } from "./ui/button"
 import { Badge } from "./ui/badge"
 import { Input } from "./ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
-import { ImageWithFallback } from "./figma/ImageWithFallback"
+import { ImageWithFallback } from "./Fallback/ImageWithFallback"
 import { 
   BookOpen, 
   Clock, 
