@@ -33,6 +33,7 @@ export function VideoSection() {
       difficulty: "Intermediate",
       rating: 4.8,
       thumbnail: "https://images.unsplash.com/photo-1612251018789-6dcc3b631f92?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHxtYXRoZW1hdGljcyUyMGJvb2tzJTIwc3R1ZHl8ZW58MXx8fHwxNzU3Nzc1ODcxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      link :"https://www.youtube.com/watch?v=TyABHnBnvSo&ab_channel=RACEACADEMYOFFICIAL-PhankarSir",
       description: "Learn to solve quadratic equations using multiple methods"
     },
     {
