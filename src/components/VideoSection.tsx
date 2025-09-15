@@ -5,13 +5,11 @@ import { Badge } from "./ui/badge"
 import { Input } from "./ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
-import { ImageWithFallback } from "./figma/ImageWithFallback"
 import { 
   Play, 
   Search, 
   Filter, 
   Clock, 
-  BookOpen,
   Star,
   User,
   Download
@@ -20,6 +18,7 @@ import {
 export function VideoSection() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedSubject, setSelectedSubject] = useState('all')
+  const [playingVideoId, setPlayingVideoId] = useState<number | null>(null)
 
   const subjects = ['Mathematics', 'Science', 'English', 'History', 'Geography']
   
@@ -32,7 +31,7 @@ export function VideoSection() {
       subject: "Mathematics",
       difficulty: "Intermediate",
       rating: 4.8,
-      thumbnail: "https://images.unsplash.com/photo-1612251018789-6dcc3b631f92?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHxtYXRoZW1hdGljcyUyMGJvb2tzJTIwc3R1ZHl8ZW58MXx8fHwxNzU3Nzc1ODcxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      thumbnail: "https://images.unsplash.com/photo-1612251018789-6dcc3b631f92?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
       link :"https://www.youtube.com/watch?v=TyABHnBnvSo&ab_channel=RACEACADEMYOFFICIAL-PhankarSir",
       description: "Learn to solve quadratic equations using multiple methods"
     },
@@ -44,7 +43,8 @@ export function VideoSection() {
       subject: "Science",
       difficulty: "Beginner",
       rating: 4.9,
-      thumbnail: "https://images.unsplash.com/photo-1605781645799-c9c7d820b4ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzY2llbmNlJTIwbGFib3JhdG9yeSUyMHN0dWRlbnR8ZW58MXx8fHwxNzU3Nzc1ODcxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      thumbnail: "https://images.unsplash.com/photo-1605781645799-c9c7d820b4ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+      link: "https://www.youtube.com/watch?v=2wF4p8S_SiI",
       description: "Understanding how plants make their own food through photosynthesis"
     },
     {
@@ -55,7 +55,8 @@ export function VideoSection() {
       subject: "English",
       difficulty: "Beginner",
       rating: 4.7,
-      thumbnail: "https://images.unsplash.com/photo-1589395937658-0557e7d89fad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHVkZW50JTIwbGVhcm5pbmclMjBlZHVjYXRpb258ZW58MXx8fHwxNzU3Nzc1ODcxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      thumbnail: "https://images.unsplash.com/photo-1589395937658-0557e7d89fad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+      link: "https://www.youtube.com/watch?v=2z1vj8a9j44",
       description: "Master the use of past, present, and future tenses in English"
     }
   ]
@@ -90,6 +91,13 @@ export function VideoSection() {
     const matchesSubject = selectedSubject === 'all' || video.subject === selectedSubject
     return matchesSearch && matchesSubject
   })
+
+  const getEmbedLink = (url: string) => {
+    if (url.includes("watch?v=")) {
+      return url.replace("watch?v=", "embed/")
+    }
+    return url
+  }
 
   return (
     <div className="space-y-6">
@@ -127,22 +135,35 @@ export function VideoSection() {
           <TabsTrigger value="downloaded">Downloaded</TabsTrigger>
         </TabsList>
         
+        {/* Featured Videos */}
         <TabsContent value="featured" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredVideos.map((video) => (
               <Card key={video.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="relative">
-                  <ImageWithFallback
-                    src={video.thumbnail}
-                    alt={video.title}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-all duration-200 flex items-center justify-center">
-                    <Button size="sm" className="opacity-0 hover:opacity-100 transition-opacity">
-                      <Play className="h-4 w-4 mr-2" />
-                      Play
-                    </Button>
-                  </div>
+                  {playingVideoId === video.id ? (
+                    <iframe
+                      src={getEmbedLink(video.link)}
+                      title={video.title}
+                      className="w-full h-48"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <>
+                      <img
+                        src={video.thumbnail}
+                        alt={video.title}
+                        className="w-full h-48 object-cover"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
+                        <Button size="sm" onClick={() => setPlayingVideoId(video.id)}>
+                          <Play className="h-4 w-4 mr-2" />
+                          Play
+                        </Button>
+                      </div>
+                    </>
+                  )}
                   <Badge variant="secondary" className="absolute top-2 right-2">
                     {video.subject}
                   </Badge>
@@ -172,7 +193,7 @@ export function VideoSection() {
                         <span className="text-sm">{video.rating}</span>
                       </div>
                     </div>
-                    <Button size="sm">
+                    <Button size="sm" onClick={() => setPlayingVideoId(video.id)}>
                       <Play className="h-3 w-3 mr-1" />
                       Watch
                     </Button>
@@ -183,6 +204,7 @@ export function VideoSection() {
           </div>
         </TabsContent>
 
+        {/* Recently Watched */}
         <TabsContent value="recent" className="space-y-4">
           <div className="space-y-4">
             {recentlyWatched.map((video) => (
@@ -218,6 +240,7 @@ export function VideoSection() {
           </div>
         </TabsContent>
 
+        {/* Downloaded */}
         <TabsContent value="downloaded" className="space-y-4">
           <div className="text-center py-12">
             <Download className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
