@@ -5,110 +5,92 @@ import { Badge } from "./ui/badge"
 import { Input } from "./ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
-import { 
-  Play, 
-  Search, 
-  Filter, 
-  Clock, 
-  Star,
-  User,
-  Download
-} from 'lucide-react'
+import { Search, Filter, Download as DownloadIcon, ExternalLink } from 'lucide-react'
+
+function getYouTubeID(url: string) {
+  const regExp = /^.*((youtu.be\/)|(v\/)|(u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/
+  const match = url.match(regExp)
+  return match && match[7].length === 11 ? match[7] : null
+}
 
 export function VideoSection() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedSubject, setSelectedSubject] = useState('all')
-  const [playingVideoId, setPlayingVideoId] = useState<number | null>(null)
-
-  const subjects = ['Mathematics', 'Science', 'English', 'History', 'Geography']
-  
-  const featuredVideos = [
+  const [recentlyWatched, setRecentlyWatched] = useState<any[]>([])
+  const [downloadedVideos, setDownloadedVideos] = useState<any[]>([])
+  const [featuredVideos, setFeaturedVideos] = useState([
     {
       id: 1,
       title: "Advanced Algebra - Quadratic Equations",
-      instructor: "Dr. Sharma",
+      instructor: "Viral Maths",
       duration: "25 min",
       subject: "Mathematics",
       difficulty: "Intermediate",
       rating: 4.8,
-      thumbnail: "https://images.unsplash.com/photo-1612251018789-6dcc3b631f92?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      link :"https://www.youtube.com/watch?v=TyABHnBnvSo&ab_channel=RACEACADEMYOFFICIAL-PhankarSir",
+      link: "https://www.youtube.com/watch?v=s_S4J2vArUE",
       description: "Learn to solve quadratic equations using multiple methods"
     },
     {
       id: 2,
       title: "Plant Biology - Photosynthesis",
-      instructor: "Prof. Gupta",
+      instructor: "Competition Wallah",
       duration: "18 min",
       subject: "Science",
       difficulty: "Beginner",
       rating: 4.9,
-      thumbnail: "https://images.unsplash.com/photo-1605781645799-c9c7d820b4ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      link: "https://www.youtube.com/watch?v=2wF4p8S_SiI",
+      link: "https://www.youtube.com/watch?v=d6pfq-0CwZc",
       description: "Understanding how plants make their own food through photosynthesis"
     },
     {
       id: 3,
       title: "English Grammar - Tenses Explained",
-      instructor: "Ms. Priya",
+      instructor: "Dear Sir",
       duration: "22 min",
       subject: "English",
       difficulty: "Beginner",
       rating: 4.7,
-      thumbnail: "https://images.unsplash.com/photo-1589395937658-0557e7d89fad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      link: "https://www.youtube.com/watch?v=2z1vj8a9j44",
+      link: "https://www.youtube.com/watch?v=pXZtRXpGNck",
       description: "Master the use of past, present, and future tenses in English"
     }
-  ]
+  ])
 
-  const recentlyWatched = [
-    {
-      id: 4,
-      title: "Geometry - Circle Properties",
-      progress: 75,
-      duration: "20 min",
-      subject: "Mathematics"
-    },
-    {
-      id: 5,
-      title: "Indian Independence Movement",
-      progress: 100,
-      duration: "30 min",
-      subject: "History"
-    },
-    {
-      id: 6,
-      title: "Chemical Reactions",
-      progress: 45,
-      duration: "15 min",
-      subject: "Science"
+  const subjects = ['Mathematics', 'Science', 'English', 'History', 'Geography']
+
+  const handleWatch = (video: any) => {
+    setRecentlyWatched(prev => {
+      if (!prev.find(v => v.link === video.link)) return [video, ...prev]
+      return prev
+    })
+    setFeaturedVideos(prev => {
+      const filtered = prev.filter(v => v.link !== video.link)
+      return [video, ...filtered]
+    })
+    window.open(video.link, '_blank')
+  }
+
+  const handleDownload = (video: any) => {
+    if (!downloadedVideos.find(v => v.link === video.link)) {
+      setDownloadedVideos(prev => [video, ...prev])
+      alert(`"${video.title}" added to Downloaded Videos!`)
     }
-  ]
+  }
 
   const filteredVideos = featuredVideos.filter(video => {
-    const matchesSearch = video.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         video.subject.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesSearch = video.title.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesSubject = selectedSubject === 'all' || video.subject === selectedSubject
     return matchesSearch && matchesSubject
   })
 
-  const getEmbedLink = (url: string) => {
-    if (url.includes("watch?v=")) {
-      return url.replace("watch?v=", "embed/")
-    }
-    return url
-  }
-
   return (
     <div className="space-y-6">
-      {/* Search and Filter */}
+      {/* Search & Filter */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
             placeholder="Search videos..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={e => setSearchTerm(e.target.value)}
             className="pl-10"
           />
         </div>
@@ -120,136 +102,99 @@ export function VideoSection() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Subjects</SelectItem>
-              {subjects.map((subject) => (
-                <SelectItem key={subject} value={subject}>{subject}</SelectItem>
-              ))}
+              {subjects.map(sub => <SelectItem key={sub} value={sub}>{sub}</SelectItem>)}
             </SelectContent>
           </Select>
         </div>
       </div>
 
+      {/* Tabs */}
       <Tabs defaultValue="featured" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="featured">Featured</TabsTrigger>
           <TabsTrigger value="recent">Recently Watched</TabsTrigger>
           <TabsTrigger value="downloaded">Downloaded</TabsTrigger>
         </TabsList>
-        
-        {/* Featured Videos */}
+
+       {/* Featured Videos */}
         <TabsContent value="featured" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredVideos.map((video) => (
-              <Card key={video.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="relative">
-                  {playingVideoId === video.id ? (
-                    <iframe
-                      src={getEmbedLink(video.link)}
-                      title={video.title}
-                      className="w-full h-48"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
-                  ) : (
-                    <>
-                      <img
-                        src={video.thumbnail}
-                        alt={video.title}
-                        className="w-full h-48 object-cover"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
-                        <Button size="sm" onClick={() => setPlayingVideoId(video.id)}>
-                          <Play className="h-4 w-4 mr-2" />
-                          Play
-                        </Button>
-                      </div>
-                    </>
-                  )}
-                  <Badge variant="secondary" className="absolute top-2 right-2">
-                    {video.subject}
-                  </Badge>
-                </div>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg line-clamp-2">{video.title}</CardTitle>
-                  <CardDescription className="line-clamp-2">{video.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
-                    <span className="flex items-center gap-1">
-                      <User className="h-3 w-3" />
-                      {video.instructor}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      {video.duration}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Badge variant={video.difficulty === 'Beginner' ? 'default' : 'secondary'}>
-                        {video.difficulty}
-                      </Badge>
-                      <div className="flex items-center gap-1">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                        <span className="text-sm">{video.rating}</span>
-                      </div>
+            {filteredVideos.map(video => {
+              const videoId = getYouTubeID(video.link)
+              const thumbnail = videoId
+                ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+                : 'https://via.placeholder.com/480x360?text=No+Thumbnail'
+              return (
+                <Card key={video.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="relative">
+                    <img src={thumbnail} alt={video.title} className="w-full h-48 object-cover" />
+                    <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-all duration-200 flex items-center justify-center gap-2">
+                      <Button size="sm" onClick={() => handleWatch(video)}>Play</Button>
+                      <Button size="sm" onClick={() => handleDownload(video)}>
+                        <DownloadIcon className="h-4 w-4" /> Download
+                      </Button>
                     </div>
-                    <Button size="sm" onClick={() => setPlayingVideoId(video.id)}>
-                      <Play className="h-3 w-3 mr-1" />
-                      Watch
-                    </Button>
+                    <Badge variant="secondary" className="absolute top-2 right-2">{video.subject}</Badge>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-lg line-clamp-2">{video.title}</CardTitle>
+                    <CardDescription className="line-clamp-2">{video.description}</CardDescription>
+                  </CardHeader>
+                </Card>
+              )
+            })}
           </div>
         </TabsContent>
+
 
         {/* Recently Watched */}
         <TabsContent value="recent" className="space-y-4">
-          <div className="space-y-4">
-            {recentlyWatched.map((video) => (
-              <Card key={video.id}>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <h3 className="font-medium">{video.title}</h3>
-                      <p className="text-sm text-muted-foreground">{video.subject}</p>
-                      <div className="flex items-center gap-4 mt-2">
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                          <Clock className="h-3 w-3" />
-                          {video.duration}
-                        </div>
-                        <div className="text-sm">
-                          Progress: {video.progress}%
-                        </div>
+          {recentlyWatched.length === 0 ? (
+            <p className="text-center text-muted-foreground">No recently watched videos</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {recentlyWatched.map(video => {
+                const videoId = getYouTubeID(video.link)
+                const thumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : ''
+                return (
+                  <Card key={video.id}>
+                    <img src={thumbnail} alt={video.title} className="w-full h-48 object-cover" />
+                    <CardContent className="pt-2 flex justify-between items-center">
+                      <div>
+                        <h3 className="font-medium">{video.title}</h3>
+                        <p className="text-sm text-muted-foreground">{video.subject}</p>
                       </div>
-                      <div className="w-full bg-muted rounded-full h-2 mt-2">
-                        <div
-                          className="bg-primary h-2 rounded-full transition-all"
-                          style={{ width: `${video.progress}%` }}
-                        />
-                      </div>
-                    </div>
-                    <Button variant={video.progress === 100 ? "outline" : "default"}>
-                      {video.progress === 100 ? "Rewatch" : "Continue"}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                      <Button size="sm" onClick={() => handleDownload(video)}><DownloadIcon className="h-4 w-4" /></Button>
+                    </CardContent>
+                  </Card>
+                )
+              })}
+            </div>
+          )}
         </TabsContent>
 
-        {/* Downloaded */}
+        {/* Downloaded Videos */}
         <TabsContent value="downloaded" className="space-y-4">
-          <div className="text-center py-12">
-            <Download className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-medium mb-2">No Downloaded Videos</h3>
-            <p className="text-muted-foreground mb-4">
-              Download videos to watch them offline
-            </p>
-            <Button>Browse Videos to Download</Button>
-          </div>
+          {downloadedVideos.length === 0 ? (
+            <p className="text-center text-muted-foreground">No downloaded videos</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {downloadedVideos.map(video => {
+                const videoId = getYouTubeID(video.link)
+                const thumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : ''
+                return (
+                  <Card key={video.id}>
+                    <img src={thumbnail} alt={video.title} className="w-full h-48 object-cover" />
+                    <CardContent className="pt-2">
+                      <h3 className="font-medium">{video.title}</h3>
+                      <p className="text-sm text-muted-foreground">{video.subject}</p>
+                      <Button size="sm" onClick={() => window.open(video.link, '_blank')}>Watch</Button>
+                    </CardContent>
+                  </Card>
+                )
+              })}
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </div>
